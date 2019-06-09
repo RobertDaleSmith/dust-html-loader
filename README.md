@@ -9,7 +9,7 @@ Built for use with the [webpack-dev-server](https://github.com/webpack/webpack-d
 plugins: [
   new HtmlWebpackPlugin({
     filename: 'index.html',
-    template: '!!dust-html-loader?root='+path.join(__dirname,'src/views')+'!src/views/index.dust'
+    template: '!!dust-html-loader!src/views/index.dust'
   }),
 ]
 ```
