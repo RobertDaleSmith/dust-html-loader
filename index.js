@@ -5,20 +5,30 @@
 const fs = require('fs');
 const path = require('path');
 const dust = require('dustjs-linkedin');
-const loaderUtils = require('loader-utils');
+const { getOptions } = require('loader-utils');
 
 
 // Main loader function
 async function loader(source) {
 
-  const options = loaderUtils.getOptions(this) || {};
+  // dust files don't have side effects, so loader results are cacheable
+  if (this.cacheable) this.cacheable();
 
-  //If root is configured then omit it from the template name
-  const root = options['root'] ? `${path.normalize(options['root'])}${path.sep}` : '';
+  // Set up default options & override them with other options
+  const default_options = {
+    root: '',
+    preserveWhitespace: false,
+    htmlLoader: false
+  };
 
-  if (this.cacheable) {
-    this.cacheable();
-  }
+  // get user supplied loader options from `this.query`
+  const loader_options = getOptions(this) || {};
+
+  // merge user options with default options
+  const options = Object.assign({}, default_options, loader_options);
+
+  // Fix slashes & resolve root
+  if (options.root) options.root = path.resolve(options.root.replace('/', path.sep));
 
   if (typeof options === "string" && options.indexOf('preserveWhitespace') > -1) {
     dust.config.whitespace = true;
@@ -28,19 +38,20 @@ async function loader(source) {
     dust.config.whitespace = true;
   }
 
-  // Get the path
-  const template_path = path.relative(options.root, this.resourcePath);
-
-  // Find regular dust partials, updating the source as needed for relatively-pathed partials
-  source = findPartials(source, template_path + '/../', options);
-
-  const context = this.rootContext || this.options.context; 
+  const context = this.context || this.rootContext;
 
   const name = this.resourcePath
-    .replace(context + path.sep + root, '')
+    .replace(context + path.sep, '')
     .replace('.dust', '')
     .split(path.sep)
     .join('/');
+
+  // Get the path
+  const template_path = (options.root || context) + path.sep;
+    console.log(template_path);
+
+  // Find regular dust partials, updating the source as needed for relatively-pathed partials
+  source = findPartials(source, template_path, options);
 
   // Compile the template
   const compiled = dust.compile(source, name);
@@ -60,18 +71,16 @@ async function loader(source) {
 }
 
 // Find and Compile DustJS partials
-function findPartials(source, source_path, options) {
+function findPartials(source, source_path) {
   const reg = /({>\s?")([^"{}]+)("[\s\S]*?\/})/g; // matches dust partial syntax
-  let result = null, partial;
+  let result = null;
 
   // search source & add a dependency for each match
   while ((result = reg.exec(source)) !== null) {
-    partial = {
-      name: result[2],
-    };
+    const partial = { name: result[2] };
 
     // grab partial source
-    partial.path = options.root+"/"+partial.name+".dust";
+    partial.path = source_path + partial.name+".dust";
     partial.source = fs.readFileSync(partial.path, 'utf8');
 
     // compile and cache partial
