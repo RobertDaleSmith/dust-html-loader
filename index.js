@@ -59,7 +59,7 @@ async function loader(source) {
 
   // Render the template
   const rendered = await new Promise(function(resolve, reject) {
-    dust.render(name, {}, function(err, result) {
+    dust.render(name, options, function(err, result) {
       if(err) console.log(err);
       resolve(result);
     });
