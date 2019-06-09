@@ -48,7 +48,6 @@ async function loader(source) {
 
   // Get the path
   const template_path = (options.root || context) + path.sep;
-    console.log(template_path);
 
   // Find regular dust partials, updating the source as needed for relatively-pathed partials
   source = findPartials(source, template_path, options);
@@ -80,7 +79,7 @@ function findPartials(source, source_path) {
     const partial = { name: result[2] };
 
     // grab partial source
-    partial.path = source_path + partial.name+".dust";
+    partial.path = path.resolve(source_path, partial.name+".dust");
     partial.source = fs.readFileSync(partial.path, 'utf8');
 
     // compile and cache partial
