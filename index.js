@@ -13,8 +13,8 @@ async function loader(source) {
 
   const options = loaderUtils.getOptions(this) || {};
 
-  //If rootDir is configured then omit it from the template name
-  const rootDir = options['rootDir'] ? `${path.normalize(options['rootDir'])}${path.sep}` : '';
+  //If root is configured then omit it from the template name
+  const root = options['root'] ? `${path.normalize(options['root'])}${path.sep}` : '';
 
   if (this.cacheable) {
     this.cacheable();
@@ -37,7 +37,7 @@ async function loader(source) {
   const context = this.rootContext || this.options.context; 
 
   const name = this.resourcePath
-    .replace(context + path.sep + rootDir, '')
+    .replace(context + path.sep + root, '')
     .replace('.dust', '')
     .split(path.sep)
     .join('/');
