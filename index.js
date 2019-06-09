@@ -67,7 +67,7 @@ async function loader(source) {
 
   if (options.htmlLoader) return rendered;
 
-  return "module.exports = \"" + rendered.replace(/\"/g, "\\\"") + "\"";
+  return "module.exports = `" + rendered.replace(/\`/g, "\\\`") + "`";
 }
 
 // Find and Compile DustJS partials
