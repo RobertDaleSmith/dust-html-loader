@@ -44,10 +44,11 @@ async function loader(source) {
 
   // Compile the template
   const compiled = dust.compile(source, name);
+  dust.loadSource(compiled);
 
+  // Render the template
   const rendered = await new Promise(function(resolve, reject) {
-    dust.loadSource(compiled);
-    dust.renderSource(source, {}, function(err, result) {
+    dust.render(name, {}, function(err, result) {
       if(err) console.log(err);
       resolve(result);
     });
@@ -60,8 +61,8 @@ async function loader(source) {
 
 // Find and Compile DustJS partials
 function findPartials(source, source_path, options) {
-  var reg = /({>\s?")([^"{}]+)("[\s\S]*?\/})/g, // matches dust partial syntax
-    result = null, partial;
+  const reg = /({>\s?")([^"{}]+)("[\s\S]*?\/})/g; // matches dust partial syntax
+  let result = null, partial;
 
   // search source & add a dependency for each match
   while ((result = reg.exec(source)) !== null) {
@@ -74,7 +75,7 @@ function findPartials(source, source_path, options) {
     partial.source = fs.readFileSync(partial.path, 'utf8');
 
     // compile and cache partial
-    var compiled = dust.compile(partial.source, partial.name);
+    const compiled = dust.compile(partial.source, partial.name);
     dust.loadSource(compiled);
   }
 
