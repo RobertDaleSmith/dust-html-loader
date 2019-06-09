@@ -13,7 +13,16 @@ plugins: [
   }),
 ]
 ```
+OR
 
+```
+plugins: [
+  new HtmlWebpackPlugin({
+    filename: 'index.html',
+    template: '!!html-loader|dust-html-loader?htmlLoader=true!src/views/index.dust'
+  }),
+]
+```
 
 ## Thanks 🙏♥️
 
