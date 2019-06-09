@@ -1,4 +1,5 @@
 # [dust](https://github.com/linkedin/dustjs) to html loader for [webpack](http://webpack.github.io/)
+<span class="badge-npmversion"><a href="https://npmjs.org/package/dust-html-loader" title="View this project on NPM"><img src="https://img.shields.io/npm/v/dust-html-loader.svg" alt="NPM version" /></a></span>
 
 Compiles dust templates with partials and exports the compiled HTML, allowing for rendering of the templates to static html files with [html-webpack-plugin](https://github.com/jantimon/html-webpack-plugin) or passing on to html-loader.
 
