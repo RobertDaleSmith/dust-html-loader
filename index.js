@@ -45,7 +45,7 @@ async function loader(source) {
   // Compile the template
   const compiled = dust.compile(source, name);
 
-  const returnedString = await new Promise(function(resolve, reject) {
+  const rendered = await new Promise(function(resolve, reject) {
     dust.loadSource(compiled);
     dust.renderSource(source, {}, function(err, result) {
       if(err) console.log(err);
@@ -53,9 +53,9 @@ async function loader(source) {
     });
   });
 
-  if (options.html === 'string') return htmlString;
+  if (options.htmlLoader) return rendered;
 
-  return "module.exports = \"" + htmlString.replace(/\"/g, "\\\"") + "\"";
+  return "module.exports = \"" + rendered.replace(/\"/g, "\\\"") + "\"";
 }
 
 // Find and Compile DustJS partials
