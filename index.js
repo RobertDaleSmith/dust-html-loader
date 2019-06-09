@@ -82,6 +82,9 @@ function findPartials(source, source_path) {
     partial.path = path.resolve(source_path, partial.name+".dust");
     partial.source = fs.readFileSync(partial.path, 'utf8');
 
+    // recursive find and compile partials within partials
+    partial.source = findPartials(partial.source, source_path);
+
     // compile and cache partial
     const compiled = dust.compile(partial.source, partial.name);
     dust.loadSource(compiled);
