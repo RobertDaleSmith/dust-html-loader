@@ -18,7 +18,7 @@ async function loader(source) {
   const default_options = {
     root: '',
     preserveWhitespace: false,
-    htmlLoader: false
+    preLoader: false
   };
 
   // get user supplied loader options from `this.query`
@@ -65,7 +65,7 @@ async function loader(source) {
     });
   });
 
-  if (options.htmlLoader) return rendered;
+  if (options.preLoader) return rendered;
 
   return "module.exports = `" + rendered.replace(/\`/g, "\\\`") + "`";
 }

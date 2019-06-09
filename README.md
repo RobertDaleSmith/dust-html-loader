@@ -19,7 +19,7 @@ OR
 plugins: [
   new HtmlWebpackPlugin({
     filename: 'index.html',
-    template: '!!html-loader|dust-html-loader?htmlLoader=true!src/views/index.dust'
+    template: '!!html-loader!dust-html-loader?preLoader=true!src/views/index.dust'
   }),
 ]
 ```
