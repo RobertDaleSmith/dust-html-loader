@@ -1,6 +1,6 @@
 {
   "name": "dust-html-loader",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "dustjs to html loader module for webpack",
   "author": {
     "name": "Robert Dale Smith",
